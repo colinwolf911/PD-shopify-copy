@@ -1,0 +1,268 @@
+<!-- config color -->
+<style>
+.blog-items .insta-follow {
+  background-color: {{ section.settings.background_content_color }};
+}
+.blog-items .insta-follow i {
+  color: {{ section.settings.icon_color }};
+}
+.blog-items .insta-follow h3 {
+  color: {{ section.settings.text_color }};
+}
+.blog-items .insta-follow a {
+  color: {{ section.settings.button_text_color }};
+  background-color: {{ section.settings.button_background_color }};
+  border-color: {{ section.settings.button_border_color }};
+}
+</style>
+<!-- end config color -->
+<div data-section-id="{{ section.id }}" data-section-type="instagram-section">
+  <div id="instagram-section-{{ section.id }}" class="instagram-section {% if section.settings.type_instagram == '1' %}type1{% else %}type2{% endif %}" style="background-color:{{section.settings.bg_section_color}}; margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    {%- if section.settings.title != '' and section.settings.title_visible == 'true' -%}
+    <h3 class="title-widget">
+      <span class="inner">
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+        <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+        {%- else -%}
+        {{ section.settings.title | split: '|' | first }}
+        {%- endif -%}
+      </span>
+    </h3>
+    {%- endif -%}
+    <div class="container">
+      <div style="position:relative;">
+        <div class="block-instafeed blog-wrap">
+          <div class="blog-items blog-grid-items{% if section.settings.hover_effect == 'true' %} enable-effect{% endif %}">
+            <div class="blog-instagrams owl-carousel instagram-feed-carousel owl-lazy-container owl-loaded owl-drag" data-count="{{ section.settings.instagram_limit }}" data-userid="{{ section.settings.instagram_user_id }}" data-token="{{ section.settings.instagram_accesstoken }}" data-itemclass="col-md-ic-1"></div>
+            {%- if section.settings.use_content -%}
+            <div class="insta-follow insta-content-style{{section.settings.content_style}}">
+              {%- if settings.language_enable -%}
+              <div class="lang1">
+                <div class="d-flex align-items-center">
+                  <i class="fa {{ section.settings.class_icon | split: '[lang2]' | first}}"></i>
+                  <div class="description">
+                    <h3>{{ section.settings.text_1 | split: '[lang2]' | first}}</h3>
+                    <span>{{ section.settings.text_2 | split: '[lang2]' | first}}</span>
+                  </div>
+                  <a class="btn btn-default" href="{{section.settings.button_link}}">{{ section.settings.text_button | split: '[lang2]' | first}}</a>
+                </div>
+              </div>
+              <div class="lang2">
+                <div class="d-flex align-items-center">
+                  <i class="fa {{ section.settings.class_icon | split: '[lang2]' | last}}"></i>
+                  <div class="description">
+                    <h3>{{ section.settings.text_1 | split: '[lang2]' | last}}</h3>
+                    <span>{{ section.settings.text_2 | split: '[lang2]' | last}}</span>
+                  </div>
+                  <a class="btn btn-default" href="{{section.settings.button_link}}">{{ section.settings.text_button | split: '[lang2]' | last}}</a>
+                </div>
+              </div>
+              {%- else -%}
+              <div class="d-flex align-items-center">
+                <i class="fa {{ section.settings.class_icon | split: '[lang2]' | first}}"></i>
+                <h3>{{ section.settings.text_1 | split: '[lang2]' | first}}</h3>
+                <span>{{ section.settings.text_2 | split: '[lang2]' | first}}</span>
+                <a class="btn btn-default" href="{{section.settings.button_link}}">{{ section.settings.text_button | split: '[lang2]' | first}}</a>
+              </div>
+              {%- endif -%}
+            </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Instagram",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_section_color",
+      "label": "Section background color"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "General Setting"
+    },
+    {
+      "type": "color",
+      "id": "background_content_color",
+      "label": "Background Content Color",
+      "default": "#0e0e0e"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button Background Color",
+      "default": "#0e0e0e"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button Border Color",
+      "default": "#2c2c2c"
+    },
+    {
+      "type": "radio",
+      "id": "hover_effect",
+      "label": "Enable Hover Effect",
+      "options": [
+        {"value": "true","label": "Yes"},
+        {"value": "false","label": "No"}
+      ],
+      "default": "false"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "select",
+      "id": "type_instagram",
+      "label": "Layout",
+      "options": [
+        {"value": "1","label": "Fixed"},
+        {"value": "2","label": "Full Width"}
+      ],
+      "default": "1"
+    },
+    {
+      "type": "radio",
+      "id": "title_visible",
+      "label": "Show/Hide Section Title",
+      "options": [
+        {"value": "true","label": "Show"},
+        {"value": "false","label": "Hide"}
+      ],
+      "default": "false"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "instagram_accesstoken",
+      "label": "AccessToken",
+      "default": "290116085.dd38710.e727245eec494e069f6e7d51d4743585"
+    },
+    {
+      "type": "text",
+      "id": "instagram_user_id",
+      "label": "User Id:",
+      "default": "290116085"
+    },
+    {
+      "type": "text",
+      "id": "instagram_limit",
+      "label": "Limit",
+      "default": "12"
+    },
+    {
+      "type":"header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_content",
+      "label": "Display Content",
+      "default": true
+    },
+    {
+      "type": "radio",
+      "id": "content_style",
+      "label": "Content Style",
+      "options": [
+        {"value": "1", "label": "Dark Big"},
+        {"value": "2", "label": "Light Fit"}
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "class_icon",
+      "label": "Class Icon",
+      "default": "icon-instagram"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Text 1",
+      "default": "Instagram"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "@PORTOECOMMERCE"
+    },
+    {
+      "type": "text",
+      "id": "text_button",
+      "label": "Button Text",
+      "default": "Follow"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram",
+      "category": "Instagram"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

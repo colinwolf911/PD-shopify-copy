@@ -1,0 +1,197 @@
+{%- if section.blocks.size > 0 -%}
+{%- assign col = 12 | divided_by: section.blocks.size -%}
+{%- else -%}
+{%- assign col = 4 -%}
+{%- endif -%}
+<div data-section-id="{{ section.id }}" data-section-type="image-lazyload-section">
+  <div class="banner-grid" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container">
+      {% if section.settings.section_title != blank %}
+      <h2 class="title" style="margin-bottom: {{ section.settings.banner_space }};">{{ section.settings.section_title }}</h2>
+      {% endif %}
+      <div class="row" style="margin: 0 -{{section.settings.space_banner}}px;">
+        {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+        {%- if block.settings.banner_image != blank -%}
+          {%- assign banner_image = block.settings.banner_image | img_url: 'master' -%}
+          {%- assign pt = 100 | divided_by: block.settings.banner_image.aspect_ratio | append: '%' -%}
+        {%- else -%}
+          {%- assign banner_image = 'img270x200.png' | asset_url -%}
+          {%- assign pt = 100 | divided_by: 1.35 | append: '%' -%}
+        {%- endif -%}
+        <div class="col-md-{{ col }}{% if section.blocks.size > 1 %} col-sm-6{% endif %}" style="padding-left:{{section.settings.space_banner}}px;padding-right:{{section.settings.space_banner}}px;">
+          <a href="{{ block.settings.banner_link }}" class="image-link">
+            <img data-src="{{ banner_image }}" style="padding-top: {{pt}};"/>
+          </a>
+          {% if block.settings.img_content != blank %}
+          <div class="img-content-{{ block.settings.content_position }}">
+            {{ block.settings.img_content }}
+          </div>
+          {%- endif -%}
+        </div>
+        {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Grid",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "Banner Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Banner Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_space",
+      "label": "Space Between title and image",
+      "info": "e.g 30px",
+      "default": "30px"
+    },
+    {
+      "type": "select",
+      "id": "space_banner",
+      "label": "Space between banner",
+      "options": [
+        {
+          "value": "30",
+          "label": "30"
+        },
+        {
+          "value": "25",
+          "label": "25"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "15",
+          "label": "15"
+        },
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "0",
+          "label": "0"
+        }
+      ],
+      "default": "7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Banner Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Home Banner Image"
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "Banner link"
+        },
+        {
+          "type": "html",
+          "id": "img_content",
+          "label": "Banner Content"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Grid",
+    "category": "Banner",
+    "settings": {
+
+    },
+    "blocks": [
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

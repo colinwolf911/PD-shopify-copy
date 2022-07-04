@@ -1,0 +1,481 @@
+{%- assign placeholder = 'bg1920x500.png' | asset_url -%}
+{%- assign ph_ar = 3.84 -%}
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section">
+  {%- case section.settings.slide_layout -%}
+    {%- when 'fullscreen' -%}
+      {%- assign layout = 'full-screen-slider' -%}
+      {%- assign pt = '100vh'-%}
+    {%- when 'fullwidth' -%}
+      {%- assign layout = 'full-width' -%}
+    {%- else -%}
+      {%- assign layout = 'container' -%}
+      {%- assign placeholder = 'img1170x500.png' | asset_url -%}
+      {%- assign ph_ar = 2.34 -%}
+  {%- endcase -%}
+  {%- if section.blocks.size > 0 -%}
+  <div class="slideshow-background slideshow-section {{layout}}" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="data-slideshow"
+         data-auto="{{ section.settings.auto_speed }}"
+         data-paging="{{ section.settings.show_paging }}"
+         data-nav="{{ section.settings.show_nav }}"
+         data-transition="{{ section.settings.slide_transition }}"
+         data-prev='{{ section.settings.nav_prev }}'
+         data-next='{{ section.settings.nav_next }}' style="display: none;"></div>
+    <div id="slideshow-section-{{ section.id }}" class="slideshow owl-carousel owl-carousel-lazy">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'image' -%}
+      {%- comment -%} Calculate image size for lazyload {%- endcomment -%}
+      {%- assign s_image = placeholder -%}
+      {%- assign background_image = placeholder -%}
+      {%- assign ar = ph_ar -%}
+      {%- if block.settings.image != blank -%}
+        {%- assign s_image = block.settings.image | img_url: 'master' -%}
+        {%- assign ar = block.settings.image.aspect_ratio -%}
+      {%- endif -%}{%- comment -%} End Calculate image size {%- endcomment -%}
+      {%- if block.settings.background_image != blank -%}
+        {%- assign background_image = block.settings.background_image | img_url: 'master' -%}
+        {%- assign ar = block.settings.background_image.aspect_ratio -%}
+      {%- endif -%}
+      {%- if layout != 'full-screen-slider' -%}
+        {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+      {%- endif -%}
+      <div class="item" style="padding-top: {{pt}};background-color: {{block.settings.lazy_back_color}};">
+        {%- comment -%} Set Background Image {%- endcomment -%}
+        {%- if block.settings.background_image_use == "1" -%}
+        <div class="slide-bg lazyload lazypreload" data-bg="{{background_image}}"></div>
+        {%- endif -%}
+        {%- comment -%} Set Image {%- endcomment -%}
+        {%- if block.settings.image_use == "1" -%}
+        <img class="slide-image" data-src="{{ s_image }}" alt="{{block.settings.image.alt}}"/>
+        {%- endif -%}
+
+      {%- else -%}
+      <div class="item">
+        <div class="video-wrap">
+          {%- if block.settings.ico_slide_video_overlay != 'none' -%}
+          <div class="video-overlay overlay-{{ block.settings.ico_slide_video_overlay }}" style="opacity: 1;"></div>
+          {%- endif -%}
+          <video class="video" poster="{{ slide_img | asset_url }}" autoplay {% if block.settings.ico_slide_video_loop == 'loop' %}loop=""{% endif %} {% if block.settings.ico_slide_video_mute == 'mute' %}muted=""{% endif %} preload="auto" data-width="0" data-height="0">
+            {%- if block.settings.ico_slide_video contains '.mp4' -%}
+            <source src="{{ block.settings.ico_slide_video }}" type="video/mp4">
+            {%- else -%}
+            <source src="{{ block.settings.ico_slide_video }}" type="video/webm">
+            {%- endif -%}
+          </video>
+        </div>
+      {%- endif -%}
+
+        {%- comment -%} Show Slider Content {%- endcomment -%}
+        {%- if block.settings.show_content == blank -%}
+        {%- if block.settings.link_slider != blank %}
+        <a href="{{ block.settings.link_slider }}" style="position:absolute;top:0;left:0;width:100%;height:100%;"></a>
+        {%- endif -%}
+        {%- else -%}
+        <div class="{% if layout != 'container' %}container{% endif %} content-container">
+          {%- if block.settings.content_style == "custom_html" -%}
+          <div class="content-slideshow {{ block.settings.content_pos }}">
+            {{ block.settings.content }}
+          </div>
+          {%- else -%}
+          <div class="content-slideshow {{ block.settings.content_style }} {{ block.settings.content_pos }}">
+            <h2>{{ block.settings.main_title }}</h2>
+            <h3>{{ block.settings.sub_title }}</h3>
+            {%- if block.settings.button_title != blank -%}
+            <a href="{{ block.settings.link_slider | default: '#' }}" class="btn btn-default">{{ block.settings.button_title }}</a>
+            {%- endif -%}
+          </div>
+          {%- endif -%}
+        </div>
+        {%- endif -%}{%- comment -%} End Slider Content {%- endcomment -%}
+      </div>
+    {%- endfor -%}
+    </div>
+    {%- if section.settings.copyright !='' -%}
+    <div class="copyright-text">
+      {%- if settings.language_enable -%}
+      <div class="lang1">{{ section.settings.copyright | split: '|' | first }}</div>
+      <div class="lang2">{{ section.settings.copyright | split: '|' | last }}</div>
+      {%- else -%}
+      {{ section.settings.copyright | split: '|' | first }}
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+</div>
+{% schema %}
+{
+  "name": "Slideshow",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "select",
+      "id": "slide_layout",
+      "label": "Layout",
+      "info": "slider will be shown as a background image if the site has fullscreen layout.",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "fullscreen",
+          "label": "FullScreen"
+        },
+        {
+          "value": "fullwidth",
+          "label": "Fullwidth"
+        }
+      ],
+      "default": "fullwidth"
+    },
+    {
+      "type": "select",
+      "id": "slide_transition",
+      "label": "Transition",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "text",
+      "id": "auto_speed",
+      "label": "Autoplay",
+      "info": "If you would like the slider to auto-rotate, then set the autoplay rotate time in ms here. I.e. you would enter '5000' for the slider to rotate every 5 seconds.",
+      "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-chevron-left\"></i>"
+    },
+    {
+      "type": "text",
+      "id": "nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-chevron-right\"></i>"
+    },
+    {
+      "type":"text",
+      "id":"copyright",
+      "label":"Copy Right slideshow"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "select",
+          "id": "background_image_use",
+          "label": "Background Image Use?",
+          "info": "Choose if you would like to display background image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_use",
+          "label": "Image Use?",
+          "info": "Choose if you would like to display image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "color",
+          "id": "lazy_back_color",
+          "label": "Lazyload Background Color",
+          "default": "#eee"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Slide Content",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "content_style",
+          "label": "Content Style",
+          "info": "Choose one of the styles you'd like to display content.",
+          "options": [
+            {"value": "custom_html", "label": "Custom HTML"},
+            {"value": "demo1", "label": "New Demo 1 Style"},
+            {"value": "demo2", "label": "New Demo 2 Style"},
+            {"value": "demo3", "label": "New Demo 3 Style"},
+            {"value": "demo5", "label": "New Demo 5 Style"},
+            {"value": "demo10", "label": "New Demo 10 Style"},
+            {"value": "demo12", "label": "New Demo 12 Style"},
+            {"value": "demo13", "label": "New Demo 13 Style"},
+            {"value": "demo14", "label": "New Demo 14 Style"},
+            {"value": "demo16", "label": "New Demo 16 Style"},
+            {"value": "demo17", "label": "New Demo 17 Style"},
+            {"value": "demo19", "label": "New Demo 19 Style"},
+            {"value": "demo20", "label": "New Demo 20 Style"}
+          ],
+          "default": "custom_html"
+        },
+        {
+          "type": "select",
+          "id": "content_pos",
+          "label": "Content Position",
+          "options": [
+            {"value": "left", "label": "Left"},
+            {"value": "right", "label": "Right"}
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "main_title",
+          "label": "Main Title"
+        },
+        {
+          "type": "text",
+          "id": "sub_title",
+          "label": "Sub Title"
+        },
+        {
+          "type": "text",
+          "id": "button_title",
+          "label": "Button Title"
+        },
+        {
+          "type": "url",
+          "id": "link_slider",
+          "label": "Link To"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Custom HTML",
+          "info": "Write your own html/css for slider content"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "ico_slide_video",
+          "label": "Background Video .mp4 or .webm URL",
+          "info": "provide the video .mp4, .webm url for the background"
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_loop",
+          "label": "Video Loop",
+          "info": "Choose if you would like the slide background video to play once, or loop.",
+          "options": [
+            {
+              "value": "loop",
+              "label": "Loop"
+            },
+            {
+              "value": "",
+              "label": "Single play"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_mute",
+          "label": "Video mute",
+          "info": "Choose if you would like the slide background video to be muted, or not.",
+          "options": [
+            {
+              "value": "mute",
+              "label": "Mute"
+            },
+            {
+              "value": "volume",
+              "label": "Volume"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_overlay",
+          "label": "Video overlay",
+          "info": "Choose if you would like to show an overlay style over the video.",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "lightgrid",
+              "label": "Lightgrid"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Slide Content",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "content_style",
+          "label": "Content Style",
+          "info": "Choose one of the styles you'd like to display content.",
+          "options": [
+            {"value": "custom_html", "label": "Custom HTML"},
+            {"value": "demo1", "label": "New Demo 1 Style"},
+            {"value": "demo2", "label": "New Demo 2 Style"},
+            {"value": "demo3", "label": "New Demo 3 Style"},
+            {"value": "demo5", "label": "New Demo 5 Style"},
+            {"value": "demo10", "label": "New Demo 10 Style"},
+            {"value": "demo12", "label": "New Demo 12 Style"},
+            {"value": "demo13", "label": "New Demo 13 Style"},
+            {"value": "demo14", "label": "New Demo 14 Style"},
+            {"value": "demo16", "label": "New Demo 16 Style"},
+            {"value": "demo17", "label": "New Demo 17 Style"},
+            {"value": "demo19", "label": "New Demo 19 Style"},
+            {"value": "demo20", "label": "New Demo 20 Style"}
+          ],
+          "default": "custom_html"
+        },
+        {
+          "type": "select",
+          "id": "content_pos",
+          "label": "Content Position",
+          "options": [
+            {"value": "left", "label": "Left"},
+            {"value": "right", "label": "Right"}
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "main_title",
+          "label": "Main Title"
+        },
+        {
+          "type": "text",
+          "id": "sub_title",
+          "label": "Sub Title"
+        },
+        {
+          "type": "text",
+          "id": "button_title",
+          "label": "Button Title"
+        },
+        {
+          "type": "url",
+          "id": "link_slider",
+          "label": "Link To"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Custom HTML",
+          "info": "Write your own html/css for slider content"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Slideshow",
+    "category": "Slideshow",
+    "settings": {
+      "auto_speed": "5000"
+    },
+    "blocks": [
+      {
+        "type": "image",
+        "settings": {
+          "background_image_use": "1",
+          "image_use": "0"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "background_image_use": "1",
+          "image_use": "0"
+        }
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

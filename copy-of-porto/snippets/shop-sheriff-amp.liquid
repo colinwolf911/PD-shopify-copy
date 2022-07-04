@@ -1,0 +1,38 @@
+{% comment %}Managed by ShopSheriff Shopify app{% endcomment %}
+
+{% if template contains 'product' %}
+  {% unless product.handle.size > 0 %}
+    {% assign denyAmp = true %}
+  {% endunless %}
+  {% assign amp_path = '/products/' | append: product.handle %}
+{% endif %}
+{% if template contains 'collection' %}
+  {% unless collection.handle == 'all' %}
+  {% unless current_tags %}
+  {% unless collection.current_type %}
+  {% unless collection.current_vendor %}
+  {% if collection.products_count %}
+    {% assign amp_path = '/collections/' | append: collection.handle %}
+    {% if current_page > 1 %}
+      {% assign amp_path = amp_path | append: '?page=' | append: current_page %}
+    {% endif %}
+    {% assign ssmeta = collection.metafields.shopsheriff %}
+    {% if ssmeta %}
+      {% assign ssMetaVisible = collection.metafields.shopsheriff.amp-visibility %}
+      {% if ssMetaVisible == 0 %}
+        {% assign denyAmp = true %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  {% endunless %}
+  {% endunless %}
+  {% endunless %}
+  {% endunless %}
+{% endif %}
+
+<script type="text/javascript">var _0x500f=['location','search','origin','utm_source=shopsheriff&utm_medium=amp&utm_campaign=shopsheriff&utm_content=add-to-cart','performance','mark','shopsheriff.amp-snippet.start','/cart','pathname','referrer','ampproject.org','includes','amp.personaldigital.com.au','utm'];(function(_0xfc9b17,_0x45a933){var _0x18154a=function(_0x3c77dc){while(--_0x3c77dc){_0xfc9b17['push'](_0xfc9b17['shift']());}};_0x18154a(++_0x45a933);}(_0x500f,0xc8));var _0x106b=function(_0x3fdf90,_0x569720){_0x3fdf90=_0x3fdf90-0x0;var _0x51b0c3=_0x500f[_0x3fdf90];return _0x51b0c3;};var a=window[_0x106b('0x0')]&&window[_0x106b('0x0')]['mark'];if(a){window[_0x106b('0x0')][_0x106b('0x1')](_0x106b('0x2'));}var doc=document;var redirect=_0x106b('0x3')===window['location'][_0x106b('0x4')]&&(doc[_0x106b('0x5')]['includes'](_0x106b('0x6'))||doc[_0x106b('0x5')][_0x106b('0x7')]('/a/s/')||doc['referrer']['includes'](_0x106b('0x8')))&&!doc['location']['search'][_0x106b('0x7')](_0x106b('0x9'));if(redirect){var f=doc[_0x106b('0xa')][_0x106b('0xb')]?'&':'?';window[_0x106b('0xa')]=window[_0x106b('0xa')][_0x106b('0xc')]+window[_0x106b('0xa')][_0x106b('0x4')]+f+_0x106b('0xd');}if(a){window['performance'][_0x106b('0x1')]('shopsheriff.amp-snippet.end');}</script>
+{% unless denyAmp %}
+{% if amp_path %}
+   <link rel="amphtml" href="{{ 'https://' | append: 'amp.personaldigital.com.au' | append: amp_path  }}">
+{% endif %}
+{% endunless %}

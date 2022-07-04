@@ -1,0 +1,54 @@
+{% layout none %}
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+
+{%- assign pageUrl = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |
+   replace:'\/','/' | 
+   replace:'%20',' ' | 
+   replace:'\u0026','&'
+-%}
+
+{% assign handles = pageUrl | split: 'handle=' | last %}
+
+{% assign h_array = handles | split: ',' %}
+
+{% capture output %}
+{
+	"products":
+        [
+            {% for handler in h_array %}
+
+				{% assign item = all_products[handler] %}
+			    {
+					                   
+				    "id"  : "{{item.id}}"
+                    ,"handle":"{{ item.handle }}"			
+					,"default_variant":"{{item.selected_or_first_available_variant.id}}"
+                   
+					,"variants":[
+						{% for variant in item.variants %}
+							{ 
+								
+								"id":"{{variant.id}}"                                 
+								,"product_id":"{{item.id}}"
+								,"inventory_policy":"{{variant.inventory_policy}}"
+								,"inventory_quantity":"{{variant.inventory_quantity}}"
+								,"inventory_management":"{{variant.inventory_management}}"
+                                
+							}
+						{% unless forloop.last %},{% endunless %}
+						{% endfor %}
+
+					]
+                }
+				{% unless forloop.last %},{% endunless %}
+               
+            {% endfor %}
+
+        ]
+
+}
+{% endcapture %}
+{{- output | strip_newlines -}}
+
+
+

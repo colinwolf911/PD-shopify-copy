@@ -1,0 +1,4 @@
+<div style="display: flex;align-items: center;display:none" id="preOrderShippingDateWrapper{{preOrderVariant.key | replace:  ':','' }}">
+	<label style="margin-right:10px">Select Shipping date</label>
+	<input type="date" min='{{ "now" | date: "%Y-%m-%d" }}' id="preOrderShippingDate{{preOrderVariant.key | replace:  ':',''}}" class="txt-pre-order-shipping-date" data-vid="{{preOrderVariant.id}}" data-key="{{preOrderVariant.key}}"/>
+</div>

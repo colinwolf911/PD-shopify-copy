@@ -1,0 +1,36 @@
+{%- if settings.product_aspect_ratio == '1' -%}
+{%- assign image_width = settings.product_ratio_width -%}
+{%- assign image_height = '' -%}
+{%- assign ar = 1 -%}
+{% else %}
+{%- assign image_width = settings.product_ratio_width -%}
+{%- assign image_height = settings.product_ratio_height -%}
+{%- assign ar = image_width | divided_by: image_height -%}
+{%- endif -%}
+{% capture image_size %}{{ image_width }}x{{ image_height }}{% endcapture %}
+<div class="product-image product-image-vertical product-image-zoom {% if product.images.size == 1 %}image-full{% endif %}">
+  {%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+  {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+  <div class="product-image-gallery loading">
+    <img id="product-featured-image" class="gallery-image visible" data-src="{{ featured_image | product_img_url: image_size, crop: 'center' }}" style="padding-top: {{pt}};"/>
+  </div>
+</div>
+<div class="more-views-vertical">
+  <a class="more-views-prev more-views-nav" href="javascript:void(0)" id="carousel-up" style="display: block;">
+    <i class="icon-angle-up"></i>
+  </a>
+  <div class="media-list">
+    <div id="more-slides" class="vertical-carousel product-image-thumbs">
+      {% for image in product.images %}
+      <div class="thumb-link">
+        <a class="image-link" href="javascript:void(0);" data-image-index="{{ forloop.index }}" data-image="{{ image | product_img_url: image_size, crop: 'center' }}" data-zoom-image="{{ image | product_img_url:'master' }}">
+          <img class="img-responsive" data-src="{{ image.src | img_url: '150x150', crop: 'center' }}" style="padding-top: 100%;"/>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <a class="more-views-next more-views-nav" href="javascript:void(0)" id="carousel-down" style="display: block;">
+    <i class="icon-angle-down"></i>
+  </a>
+</div>

@@ -1,0 +1,67 @@
+{%- for block in section.blocks-%}
+{%- if block.settings.product_id == product.handle -%}
+<div class="fullwidth-custom-block">
+  {%- if settings.language_enable -%}
+    <div class="lang1">{{ block.settings.content | split: '|' | first }}</div>
+    <div class="lang2">{{ block.settings.content | split: '|' | last }}</div>
+  {%- else -%}
+    {{ block.settings.content | split: '|' | first }}
+  {%- endif -%}
+</div>
+<style>
+.fullwidth-custom-block {
+  padding: {{block.settings.padding}};
+  margin-top: {{block.settings.margin_top | remove: "px" | append: "px"}};
+  margin-bottom: {{block.settings.margin_bottom | remove: "px" | append: "px"}};
+}
+</style>
+{%- endif -%}
+{%- endfor -%}
+{% schema %}
+{
+  "name": "Product Page Custom Html",
+  "blocks": [
+    {
+      "type": "custom_html",
+      "name": "Product Custom",
+      "settings": [
+        {
+          "type": "text",
+          "id": "margin_top",
+          "label": "Section Margin Top",
+          "default": "30px",
+          "info": "40px"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Section Margin Bottom",
+          "info": "40px"
+        },
+        {
+          "type": "text",
+          "id": "padding",
+          "label": "Section Padding",
+          "info": "Ex:(40px 40px 40px) (top right bottom left)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title"
+        },
+        {
+          "type": "product",
+          "id": "product_id",
+          "label": "Chose product using Product Custom Html"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Content",
+          "default": "<div class=\"fullwidth-row\" style=\"background-color: #f4f4f4; padding: 100px 0;\"><div class=\"container\"><div class=\"row\"><div class=\"col-lg-4\"><div style=\"overflow:hidden;\"><h3 style=\"font-size: 20px; color: #21293c;position: relative;display: inline-block;font-weight:700;line-height:32px;margin-bottom:20px;\">INCREDIBLE QUALITY<span style=\"position: absolute;border-top: 1px solid #21293c;top: 50%;margin-top: -0.5px;left: 100%;margin-left: 25px;width: 50vw;\"></span></h3><p style=\"line-height:24px;margin-bottom:20px;font-size:14px;\">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p></div><div style=\"overflow:hidden;\"><h3 style=\"font-size: 20px; color: #21293c;position: relative;display: inline-block;font-weight:700;line-height:32px;margin-bottom:20px;\">ADVANCED SOUND<span style=\"position: absolute;border-top: 1px solid #21293c;top: 50%;margin-top: -0.5px;left: 100%;margin-left: 25px;width: 50vw;\"></span></h3><p style=\"line-height:24px;margin-bottom:20px;font-size:14px;\">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p></div></div><div class=\"col-lg-4 a-center\"><img data-src=\"\\cdn.shopify.com/s/files/1/1632/5913/files/shop1_sticky_both_info_bottom-1.jpg\" alt=\"\" style=\"max-width: 100%;\"></div><div class=\"col-lg-4 text-right\"><div style=\"overflow:hidden;\"><h3 style=\"font-size: 20px; color: #21293c;position: relative;display: inline-block;font-weight:700;line-height:32px;margin-bottom:20px;\"><span style=\"position: absolute;border-top: 1px solid #21293c;top: 50%;margin-top: -0.5px;right: 100%;margin-right: 25px;width: 50vw;\"></span>ULTRA BOOST</h3><p style=\"line-height:24px;margin-bottom:20px;font-size:14px;\">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p></div><div style=\"overflow:hidden;\"><h3 style=\"font-size: 20px; color: #21293c;position: relative;display: inline-block;font-weight:700;line-height:32px;margin-bottom:20px;\"><span style=\"position: absolute;border-top: 1px solid #21293c;top: 50%;margin-top: -0.5px;right: 100%;margin-right: 25px;width: 50vw;\"></span>NOISE REDUCTION</h3><p style=\"line-height:24px;margin-bottom:20px;font-size:14px;\">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p></div></div></div></div></div>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

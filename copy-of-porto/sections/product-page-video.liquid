@@ -1,0 +1,243 @@
+{%- for block in section.blocks-%}
+{%- if block.settings.product_id == product.handle -%}
+<div class="fullwidth-row">
+  <div class="full-width-video">
+    <div class="porto-u-heading" style="text-align:center">
+      {%- if settings.product_page_type != 'fullwidth' -%}
+      <h3 style="font-weight: 600;color:#21293c;font-size: 36px;">
+        {% if settings.language_enable %}
+        <span class="lang1">{{ block.settings.content1 | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.content1 | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.content1 | split: '|' | first }}
+        {%- endif -%}
+      </h3>
+      {%- endif -%}
+      <div class="porto-u-sub-heading" style="font-weight: 600;color: #7b858a;font-size: 20px;line-height: 36px;">
+        {%- if settings.product_page_type != 'fullwidth' -%}
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ block.settings.content2 | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.content2 | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.content2 | split: '|' | first }}
+        {%- endif -%}
+        {%- endif -%}
+        <a class="video-popup" href="{{block.settings.video_url}}">
+          {%- assign icon_w = '38' -%}
+          {%- assign icon_h = '38' -%}
+          {%- assign icon_img = 'shop1_extended_product_playicon.png' -%}
+          {%- if settings.product_page_type == 'fullwidth' -%}
+          {%- assign icon_w = '120' -%}
+          {%- assign icon_h = '120' -%}
+          {%- assign icon_img = 'shop1_fullwidth_product_playicon.png' -%}
+          {%- endif -%}
+          <img style="cursor: pointer;margin-left: 5px" src="{{icon_img | asset_url }}" alt="" width="{{icon_w}}" height="{{icon_h}}">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.video-popup').magnificPopup({
+    type:'iframe',
+    markup: '<div class="mfp-iframe-scaler">'+
+    '<div class="mfp-close">×</div>'+
+    '<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
+    '</div>',
+  });
+});
+</script>
+<style>
+.full-width-video {
+  {%- if block.settings.background_image != blank -%}
+  background-image: url({{block.settings.background_image | img_url: 'master'}}) !important;
+  background-position: {{block.settings.background_position | replace: '_', ' ' }} !important;
+  background-repeat: {{block.settings.background_image_repeat}} !important;
+  background-size: {{block.settings.background_size}} !important;
+  background-attachment: {{block.settings.background_attachment}} !important;
+  {%- endif -%}
+  background-color: #fff;
+  padding: {{block.settings.padding}};
+  margin-top: {{block.settings.margin_top | remove: "px" | append: "px"}};
+  margin-bottom: {{block.settings.margin_bottom | remove: "px" | append: "px"}};
+}
+.template-product .mfp-close, .template-product .mfp-close-btn-in .mfp-close {
+  font-weight: 600;
+  font-size: 22px;
+  color: #838383;
+}
+</style>
+{%- endif -%}
+{%- endfor -%}
+{% schema %}
+{
+  "name": "Product Page Video",
+  "blocks": [
+  {
+      "type": "product_video",
+      "name": "Product Video",
+        "settings": [
+        {
+          "type": "text",
+          "id": "margin_top",
+          "label": "Section Margin Top",
+      "default": "30px",
+          "info": "40px"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Section Margin Bottom",
+          "info": "40px"
+        },
+        {
+          "type": "text",
+          "id": "padding",
+          "label": "Section Padding",
+          "default" : "100px 0 95px 0",
+          "info": "Ex:(40px 40px 40px) (top right bottom left)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title"
+        },
+        {
+          "type": "product",
+          "id": "product_id",
+          "label": "Chose product using Product View Video"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video Url",
+          "info": "Support Youtube, Vimeo",
+       "default": "//player.vimeo.com/video/1084537?autoplay=1"
+        },
+        {
+          "type": "text",
+          "id": "content1",
+          "label": "Content Video 1",
+      "default": "Concept Film"
+        },
+        {
+          "type": "text",
+          "id": "content2",
+          "label": "Content Video 2",
+      "default": "WATCH"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "select",
+          "id": "background_image_repeat",
+          "label": "Background Repeat",
+          "options": [
+            {
+              "value": "no-repeat",
+              "label": "No Repeat"
+            },
+            {
+              "value": "repeat-x",
+              "label": "Repeat x (Repeat Horizontal)"
+            },
+            {
+              "value": "repeat-y",
+              "label": "Repeat y (Repeat Verticle)"
+            },
+            {
+              "value": "repeat",
+              "label": "Repeat All"
+            }
+          ],
+          "default": "no-repeat"
+        },
+        {
+          "type": "select",
+          "id": "background_size",
+          "label": "Background Size",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "cover",
+              "label": "Cover"
+            },
+            {
+              "value": "contain",
+              "label": "Contain"
+            }
+          ],
+          "default": "cover"
+        },
+        {
+          "type": "select",
+          "id": "background_attachment",
+          "label": "Background Attachment",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "fixed",
+              "label": "Fixed"
+            },
+            {
+              "value": "scroll",
+              "label": "Scroll"
+            },
+            {
+              "value": "inherit",
+              "label": "Inherit"
+            }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "select",
+          "id": "background_position",
+          "label": "Background Position",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "left_top",
+              "label": "Left Top"
+            },
+            {
+              "value": "left_center",
+              "label": "Left Center"
+            },
+            {
+              "value": "left_bottom",
+              "label": "Left Bottom"
+            },
+            {
+              "value": "center_top",
+              "label": "Center Top"
+            },
+            {
+              "value": "center_center",
+              "label": "Center Center"
+            },
+            {
+              "value": "center_bottom",
+              "label": "Center Bottom"
+            }
+          ],
+          "default": "center_center"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

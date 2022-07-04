@@ -1,0 +1,233 @@
+<div class="banner_fixed_grid banner_fixed_grid_{{section.id}}" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+  <div class="container">
+    <div class="row" style="margin:0 -10px;">
+      <div class="col-md-3 col-6" style="padding:0 10px;padding-bottom:20px;">
+        {%- for i in (1..3) -%}
+        {%- capture banner_num -%}banner_left_{{ i }}{%- endcapture -%}
+        {%- capture banner_link -%}banner_left_link_{{ i }}{%- endcapture -%}
+
+        <div class="b-left banner-item">
+          {%- if section.settings[banner_num] != blank -%}
+            {%- assign image_url = section.settings[banner_num] | img_url: 'master' -%}
+            {%- assign ar = section.settings[banner_num].aspect_ratio -%}
+          {%- else -%}
+            {%- if i == 1 -%}
+            {%- assign image_url = 'img270x318.png' | asset_url -%}
+              {%- assign ar = 0.8490566037735849 -%}
+            {%- elsif i == 2 -%}
+              {%- assign image_url = 'img270x421.png' | asset_url -%}
+              {%- assign ar = 0.6413301662707838 -%}
+            {%- else -%}
+              {%- assign image_url = 'img270x246.png' | asset_url -%}
+              {%- assign ar = 1.097560975609756 -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+          <a class="image-link" href="{{section.settings[banner_link]}}">
+            <img data-src="{{ image_url }}" alt="" style="padding-top: {{pt}};">
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="col-md-3 col-6 order-md-last" style="padding:0 10px;padding-bottom:20px;">
+        {%- for i in (1..3) -%}
+        {%- capture banner_num -%}banner_right_{{ i }}{%- endcapture -%}
+        {%- capture banner_link -%}banner_right_link_{{ i }}{%- endcapture -%}
+        <div class="b-right banner-item">
+          {%- if section.settings[banner_num] != blank -%}
+            {%- assign image_url = section.settings[banner_num] | img_url: 'master' -%}
+            {%- assign ar = section.settings[banner_num].aspect_ratio -%}
+          {%- else -%}
+            {%- if i == 1 -%}
+              {%- assign image_url = 'img270x216.png' | asset_url -%}
+              {%- assign ar = 1.25 -%}
+            {%- elsif i == 2 -%}
+              {%- assign image_url = 'img270x523.png' | asset_url -%}
+              {%- assign ar = 0.5162523900573614 -%}
+            {%- else -%}
+              {%- assign image_url = 'img270x246.png' | asset_url -%}
+              {%- assign ar = 1.097560975609756 -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+          <a class="image-link" href="{{section.settings[banner_link]}}">
+            <img data-src="{{ image_url }}" alt="" style="padding-top: {{pt}};">
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="col-md-6" style="padding:0 10px;padding-bottom:20px;">
+        {%- for i in (1..3) -%}
+        {%- capture banner_num -%}banner_main_{{ i }}{%- endcapture -%}
+        {%- capture banner_link -%}banner_main_link_{{ i }}{%- endcapture -%}
+        <div class="b-center banner-item">
+          {%- if section.settings[banner_num] != blank -%}
+            {%- assign image_url = section.settings[banner_num] | img_url: 'master' -%}
+            {%- assign ar = section.settings[banner_num].aspect_ratio -%}
+          {%- else -%}
+            {%- if i == 1 -%}
+              {%- assign image_url = 'img560x361.png' | asset_url -%}
+              {%- assign ar = 1.551246537396122 -%}
+            {%- elsif i == 2 -%}
+              {%- assign image_url = 'img560x330.png' | asset_url -%}
+              {%- assign ar = 1.696969696969697 -%}
+            {%- else -%}
+              {%- assign image_url = 'img560x294.png' | asset_url -%}
+              {%- assign ar = 1.904761904761905 -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+          <a class="image-link" href="{{section.settings[banner_link]}}">
+            <img data-src="{{ image_url }}" alt="" style="padding-top: {{pt}};">
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  <style>
+    .banner_fixed_grid_{{section.id}} {
+      background-color: {{section.settings.bg_section_color}};
+    }
+  </style>
+</div>
+{% schema %}
+  {
+    "name": "Banner Fixed Grid",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Settings"
+      },
+      {
+        "type": "color",
+        "id": "bg_section_color",
+        "label": "Section background color"
+      },
+      {
+        "type": "text",
+        "id": "margin_top",
+        "label": "Section margin top",
+        "info": "40px"
+      },
+      {
+        "type": "text",
+        "id": "margin_bottom",
+        "label": "Section margin bottom",
+        "info": "40px"
+      },
+      {
+        "type": "text",
+        "id": "section_padding",
+        "label": "Section padding",
+        "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+      },
+      {
+        "type": "header",
+        "content": "Banner Settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_left_1",
+        "label": "Banner Left 1"
+      },
+      {
+        "type": "url",
+        "id": "banner_left_link_1",
+        "label": "Banner Left Link 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_left_2",
+        "label": "Banner Left 2"
+      },
+      {
+        "type": "url",
+        "id": "banner_left_link_2",
+        "label": "Banner Left Link 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_left_3",
+        "label": "Banner Left 3"
+      },
+      {
+        "type": "url",
+        "id": "banner_left_link_3",
+        "label": "Banner Left Link 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_right_1",
+        "label": "Banner Right 1"
+      },
+      {
+        "type": "url",
+        "id": "banner_right_link_1",
+        "label": "Banner Right Link 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_right_2",
+        "label": "Banner Right 2"
+      },
+      {
+        "type": "url",
+        "id": "banner_right_link_2",
+        "label": "Banner Right Link 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_right_3",
+        "label": "Banner Right 3"
+      },
+      {
+        "type": "url",
+        "id": "banner_right_link_3",
+        "label": "Banner Right Link 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_main_1",
+        "label": "Banner Main 1"
+      },
+      {
+        "type": "url",
+        "id": "banner_main_link_1",
+        "label": "Banner Main Link 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_main_2",
+        "label": "Banner Main 2"
+      },
+      {
+        "type": "url",
+        "id": "banner_main_link_2",
+        "label": "Banner Main Link 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner_main_3",
+        "label": "Banner Main 3"
+      },
+      {
+        "type": "url",
+        "id": "banner_main_link_3",
+        "label": "Banner Main Link 3"
+      }
+    ],
+    "presets": [{
+      "name": "Banner Fixed Grid",
+      "category": "Banner"
+    }]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,531 @@
+<style>
+  #slideshow-section-{{ section.id }} .content-slideshow {
+    top: 48%;
+    padding: 0 3.6111em;
+    font-size: 1.8rem;
+  }
+  #slideshow-section-{{ section.id }} .promotion {
+    margin: 0;
+    font-size: 1em;
+    line-height: 2.111em;
+    text-transform: uppercase;
+  }
+  #slideshow-section-{{ section.id }} .promotion b {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.444em;
+  }
+  #slideshow-section-{{ section.id }} .main-title {
+    font-size: 2.444em;
+    font-weight: 900;
+    line-height: .905em;
+    text-transform: uppercase;
+  }
+  #slideshow-section-{{ section.id }} .sub-title {
+    margin-bottom: 3em;
+    font-size: .7778em;
+    font-weight: 300;
+  }
+  #slideshow-section-{{ section.id }} .btn {
+    padding: 1em 2.429em;
+    border: none;
+    border-radius: 3px !important;
+    background-color: #010204;
+    font-size: .7778em;
+    letter-spacing: .025em;
+    line-height: 1;
+  }
+  @media (max-width: 767px) {
+    #slideshow-section-{{ section.id }} .content-slideshow {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section">
+  <div id="slideshow_slidebar_collection" class="main-slideshow" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container">
+      <div class="row" style="margin:0 -10px;">
+        <div class="col-lg-9 order-lg-last" style="padding:0 10px;">
+          {%- if section.blocks.size > 0 -%}
+          <div class="slideshow-collection slideshow-section">
+            <div class="data-slideshow"
+                 data-rtl="true"
+                 data-auto="{{ section.settings.auto_speed }}"
+                 data-paging="{{ section.settings.slide_pagination }}"
+                 data-nav="{{ section.settings.slide_navigation }}"
+                 data-transition="{{ section.settings.slide_transition }}"
+                 data-prev='{{ section.settings.slide_nav_prev }}' 
+                 data-next='{{ section.settings.slide_nav_next }}' style="display: none;"></div>
+            <div id="slideshow-section-{{ section.id }}" class="slideshow owl-carousel owl-carousel-lazy">
+              {% comment %} Loop into blocks {% endcomment %}
+              {%- for block in section.blocks -%}
+              {%- if block.type == "image" -%}
+
+              {%- comment -%} Calculate Image Size for Lazyload {%- endcomment -%}
+              {%- assign image_url = 'bg1140x500.png' | asset_url -%}
+              {%- assign background_image = 'bg1140x500.png' | asset_url -%}
+              {%- assign ar = 2.28 -%}
+              {%- if block.settings.image != blank -%}
+                {%- assign image_url = block.settings.image | img_url: 'master' -%}
+                {%- assign ar = block.settings.image.aspect_ratio -%}
+              {%- endif -%}
+              {%- if block.settings.background_image != blank -%}
+                {%- assign background_image = block.settings.background_image | img_url: 'master' -%}
+                {%- assign ar = block.settings.background_image.aspect_ratio -%}
+              {%- endif -%}
+              {%- comment -%} End Calculate Image Size {%- endcomment -%}
+              <div class="item" style="padding-top: {{100 | divided_by: ar}}%;background-color: {{block.settings.lazy_back_color}};">
+                {%- comment -%} Show Background Image {%- endcomment -%}
+                {%- if block.settings.background_image_use == '1' -%}
+                  <div class="slide-bg lazyload lazypreload" data-bg="{{background_image}}"></div>
+                {%- endif -%}{%- comment -%} End Show Background Image {%- endcomment -%}
+                {%- if block.settings.image_use == '1' -%}
+                  <img class="slide-image" data-src="{{ image_url }}" alt="{{block.settings.image.alt}}"/>
+                {%- endif -%}
+
+              {%- else -%}
+              <div class="item">
+                <div class="video-wrap">
+                  {%- if block.settings.ico_slide_video_overlay != 'none' -%}
+                    <div class="video-overlay overlay-{{ block.settings.ico_slide_video_overlay }}" style="opacity: 1;"></div>
+                  {%- endif -%}
+                  <video class="video" poster="{{ slide_img | asset_url }}" autoplay {% if block.settings.ico_slide_video_loop == 'loop' %}loop=""{% endif %} {% if block.settings.ico_slide_video_mute == 'mute' %}muted=""{% endif %} preload="auto" data-width="0" data-height="0">
+                    {%- if block.settings.ico_slide_video contains '.mp4' -%}
+                      <source src="{{ block.settings.ico_slide_video }}" type="video/mp4">
+                    {%- else -%}
+                      <source src="{{ block.settings.ico_slide_video }}" type="video/webm">
+                    {%- endif -%}
+                  </video>
+                </div><!-- End .video-wrap -->
+              {%- endif -%}
+
+                {% comment %} Show Slide Content {% endcomment %}
+                {%- if block.settings.show_content == blank -%}
+                {%- if block.settings.link_slider != blank -%}{% comment %} Set entire slide as link {% endcomment %}
+                <a href="{{ block.settings.link_slider }}" style="position:absolute;top:0;left:0;width:100%;height:100%;"></a>
+                {%- endif -%}{% comment %} End Set entire slide as link {% endcomment %}
+
+                {%- else -%}{% comment %} Show Slide Content {% endcomment %}
+
+                <div class="{% if layout != 'container' %}container{% endif %} content-container">
+                  {%- if block.settings.content_style == "custom_html" -%}
+                  <div class="content-slideshow {{ block.settings.content_pos }}">
+                    {{ block.settings.content }}
+                  </div>
+                  {%- else -%}
+                  <div class="content-slideshow {{ block.settings.content_pos }}" style="color: {{ block.settings.content_color }};">
+                    <h3 class="promotion">{{ block.settings.promotion }}</h3>
+                    <h2 class="main-title">{{ block.settings.main_title }}</h2>
+                    <h3 class="sub-title">{{ block.settings.sub_title }}</h3>
+                    {%- if block.settings.button_title != blank -%}
+                    <a href="{{ block.settings.link_slider }}" class="btn btn-default">{{ block.settings.button_title }}</a>
+                    {%- endif -%}
+                  </div>
+                  {%- endif -%}
+                </div><!-- End .content-container -->
+                {%- endif -%}{% comment %} End Show Slide Content {% endcomment %}
+
+              </div><!-- End .item -->
+              {%- endfor -%}{% comment %} End Loop into blocks {% endcomment %}
+            </div><!-- End .owl-carousel -->
+          </div>
+          {%- endif -%}
+        </div>
+        <div class="col-lg-3" style="padding:0 10px;">
+          <div class="side-custom-menu custom-menu-{{ section.id }} category-menu-style-{{settings.category_menu_style}}">
+            <h2>
+              {%- if settings.language_enable -%}
+              <span class="lang1">{{ section.settings.sidebar_title | split: '|' | first }}</span>
+              <span class="lang2">{{ section.settings.sidebar_title | split: '|' | last }}</span>
+              {%- else -%}
+              {{ section.settings.sidebar_title | split: '|' | first }}
+              {%- endif -%}
+            </h2>
+            {%- include 'side-menu' -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Slideshow & Sidebar Menu",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Menu"
+    },
+    {
+      "type": "text",
+      "id": "sidebar_title",
+      "label": "Title",
+      "default": "Top Categories"
+    },
+    {
+      "type": "header",
+      "content": "Slideshow Settings"
+    },
+    {
+      "type": "text",
+      "id": "auto_speed",
+      "label": "Autoplay",
+      "info": "If you would like the slider to auto-rotate, then set the autoplay rotate time in ms here. I.e. you would enter '5000' for the slider to rotate every 5 seconds.",
+      "default": "5000"
+    },
+    {
+      "type": "select",
+      "id": "slide_transition",
+      "label": "Transition",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Slide"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "select",
+      "id": "slide_navigation",
+      "label": "Navigation",
+      "info": "Choose if you would like to display the left\/right arrows on the slider.",
+      "options": [
+        {
+          "value": "1",
+          "label": "Yes"
+        },
+        {
+          "value": "0",
+          "label": "No"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "slide_pagination",
+      "label": "Pagination",
+      "info": "Choose if you would like to display the slider pagination.",
+      "options": [
+        {
+          "value": "1",
+          "label": "Yes"
+        },
+        {
+          "value": "0",
+          "label": "No"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "slide_nav_prev",
+      "label": "Prev Navigation",
+      "default": "<i class=\"icon-chevron-left\"></i>"
+    },
+    {
+      "type": "text",
+      "id": "slide_nav_next",
+      "label": "Next Navigation",
+      "default": "<i class=\"icon-chevron-right\"></i>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "select",
+          "id": "background_image_use",
+          "label": "Background Image Use?",
+          "info": "Choose if you would like to display background image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_use",
+          "label": "Image Use?",
+          "info": "Choose if you would like to display image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "color",
+          "id": "lazy_back_color",
+          "label": "Lazyload Background Color",
+          "default": "#eee"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Slide Content",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "content_pos",
+          "label": "Content Position",
+          "options": [
+            {"value": "left", "label": "Left"},
+            {"value": "right", "label": "Right"}
+          ],
+          "default": "left"
+        },
+        {
+          "type": "color",
+          "id": "content_color",
+          "label": "Content Text Color",
+          "default": "#2c373c"
+        },
+        {
+          "type": "select",
+          "id": "content_style",
+          "label": "Content Style",
+          "info": "Choose one of the styles you'd like to display content.",
+          "options": [
+            {"value": "default", "label": "Default"},
+            {"value": "custom_html", "label": "Custom HTML"}
+          ],
+          "default": "default"
+        },
+        {
+          "type": "text",
+          "id": "promotion",
+          "label": "Promotion Text"
+        },
+        {
+          "type": "text",
+          "id": "main_title",
+          "label": "Main Title"
+        },
+        {
+          "type": "text",
+          "id": "sub_title",
+          "label": "Sub Title"
+        },
+        {
+          "type": "text",
+          "id": "button_title",
+          "label": "Button Title"
+        },
+        {
+          "type": "url",
+          "id": "link_slider",
+          "label": "Button Link"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Custom HTML",
+          "info": "Write your own html/css for slider content"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "ico_slide_video",
+          "label": "Background Video .mp4 or .webm URL",
+          "info": "provide the video .mp4, .webm url for the background"
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_loop",
+          "label": "Video Loop",
+          "info": "Choose if you would like the slide background video to play once, or loop.",
+          "options": [
+            {
+              "value": "loop",
+              "label": "Loop"
+            },
+            {
+              "value": "",
+              "label": "Single play"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_mute",
+          "label": "Video mute",
+          "info": "Choose if you would like the slide background video to be muted, or not.",
+          "options": [
+            {
+              "value": "mute",
+              "label": "Mute"
+            },
+            {
+              "value": "volume",
+              "label": "Volume"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "ico_slide_video_overlay",
+          "label": "Video overlay",
+          "info": "Choose if you would like to show an overlay style over the video.",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "lightgrid",
+              "label": "Lightgrid"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "show_content",
+          "label": "Show Slide Content",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "content_pos",
+          "label": "Content Position",
+          "options": [
+            {"value": "left", "label": "Left"},
+            {"value": "right", "label": "Right"}
+          ],
+          "default": "left"
+        },
+        {
+          "type": "color",
+          "id": "content_color",
+          "label": "Content Text Color",
+          "default": "#2c373c"
+        },
+        {
+          "type": "select",
+          "id": "content_style",
+          "label": "Content Style",
+          "info": "Choose one of the styles you'd like to display content.",
+          "options": [
+            {"value": "default", "label": "Default"},
+            {"value": "custom_html", "label": "Custom HTML"}
+          ],
+          "default": "default"
+        },
+        {
+          "type": "text",
+          "id": "promotion",
+          "label": "Promotion Text"
+        },
+        {
+          "type": "text",
+          "id": "main_title",
+          "label": "Main Title"
+        },
+        {
+          "type": "text",
+          "id": "sub_title",
+          "label": "Sub Title"
+        },
+        {
+          "type": "text",
+          "id": "button_title",
+          "label": "Button Title"
+        },
+        {
+          "type": "url",
+          "id": "link_slider",
+          "label": "Button Link"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Custom HTML",
+          "info": "Write your own html/css for slider content"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Slideshow & SliderBar Menu",
+    "category": "Slideshow",
+    "settings": {
+      "auto_speed": "5000"
+    },
+    "blocks": [
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

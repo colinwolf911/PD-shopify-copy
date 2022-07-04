@@ -1,0 +1,29 @@
+{% capture collection_title %}{{ sub_collection.title | escape }}{% endcapture %}
+{%- assign product_count = sub_collection.all_products_count -%}
+{%- if sub_collection.template_suffix == 'sub-collection' -%}
+{%- assign product_count = total_products -%}
+{%- endif -%}
+<div class="product-top">
+  <a href="{{ sub_collection.url }}" title="{{ collection_title }}">
+    {% if sub_collection.image %}
+    {{ sub_collection.image.src | collection_img_url: '400x400', crop: 'center' | img_tag: collection_title }}
+    {% else %}
+    {{ sub_collection.products.first.featured_image | product_img_url: '400x400', crop: 'center' | img_tag: collection_title }}
+    {% endif %}
+  </a>
+  <span class="thumb-info-title">
+    <h3 class="sub-title thumb-info-inner">
+      {% if settings.language_enable %}
+      <a href="{{ sub_collection.url }}" title="{{ 'sub_collection.general.link_title' | t: title: collection_title }}" {% if settings.language_enable %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+        <span class="lang1">{{ sub_collection.title | split: '|' | first }}</span>
+        <span class="lang2">{{ sub_collection.title | split: '|' | last }}</span>
+      </a>
+      {% else %}
+      <a href="{{ sub_collection.url }}" title="{{ 'sub_collection.general.link_title' | t: title: collection_title }}" {% if settings.language_enable %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+        {{ sub_collection.title }}
+      </a>
+      {% endif %}
+    </h3>
+    <span class="thumb-info-type" {% if settings.language_enable %}data-translate="sub_collection.general.items_with_count|count:{{product_count}}"{% endif %}>{{ 'collections.general.items_with_count' | t: count: product_count }}</span>
+  </span>
+</div>

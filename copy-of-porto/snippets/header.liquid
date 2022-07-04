@@ -1,0 +1,67 @@
+{% case settings.logo_width %}
+{% when '' %}
+{%- assign image_logo_width = '111' -%}
+{%- assign image_logo_height = '' -%}
+{% else %}
+{%- assign image_logo_width = settings.logo_width -%}
+{%- assign image_logo_height = '' -%}
+{% endcase %}
+{% capture logo_size %}{{ image_logo_width }}x{{ image_logo_height }}{% endcapture %}
+{% case settings.logo_sticky_width %}
+{% when '' %}
+{%- assign image_logo_sticky_width = '71' -%}
+{%- assign image_logo_sticky_height = '' -%}
+{% else %}
+{%- assign image_logo_sticky_width = settings.logo_sticky_width -%}
+{%- assign image_logo_sticky_height = '' -%}
+{% endcase %}
+{% capture logo_sticky_size %}{{ image_logo_sticky_width }}x{{ image_logo_sticky_height }}{% endcapture %}
+{% if settings.header_show_notice != blank %}
+{% section 'header-notice' %}
+{% endif %}
+<header class="main-section-header">
+  <div class="header-container {{settings.header_design}} {% if settings.header_overlap != blank and template == 'index' %}header-overlap{% endif %} header-color-{{settings.header_text_color}} header-menu-style-{{settings.header_menu_style}} menu-color-{{settings.header_menu_style_color}} sticky-menu-color-{{settings.header_sticky_menu_style_color}} header-menu-{{settings.header_menu_align}}">
+    {%- assign name_header = 'header_' | append:settings.header_design -%}
+    {%- include name_header -%}
+  </div>
+  {% if settings.header_sticky_enable == 'enable'%}
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var scrolled = false;
+      $(window).scroll(function() {
+        if(150 < $(window).scrollTop() && !scrolled){
+          var $headerContainer = $('.header-container');
+          if($('.main-section-header').height() != 0 ) {
+            $('.main-section-header').height($headerContainer.height());
+          }
+          $headerContainer.addClass('sticky-header');
+          $('.header-container .main-nav').addClass('container');
+          scrolled = true;
+        }
+        if(150>$(window).scrollTop() && scrolled){
+          $('.main-section-header').height('auto');
+          $('.header-container').removeClass('sticky-header');
+          $('.header-container .main-nav').removeClass('container');
+          scrolled = false;
+        }
+      })
+    });
+  </script>
+  {% endif %}
+  <div class="mobile-nav">
+    <span class="close-sidebar-menu"><i class="icon-cancel"></i></span>
+    <div id="navbar-toggle" class="bs-navbar-collapse skip-content">
+      {% include 'mobile-menu' %}
+      {% if settings.header_design == 'type3' %}
+        {% include 'mobile-menu', include_second_menu: true %}
+      {% endif %}
+    </div>
+    <div class="custom-block">
+      <div class="lang1">{{ settings.header_mobile_custom_text | split: '[lang2]' | first }}</div>
+      {% if settings.language_enable %}
+      <div class="lang2">{{ settings.header_mobile_custom_text | split: '[lang2]' | last }}</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="mobile-nav-overlay"></div>
+</header>

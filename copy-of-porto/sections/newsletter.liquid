@@ -1,0 +1,134 @@
+<style>
+.newsletter {
+  padding: 100px 5% 100px 17%;
+  background-size: cover;
+  background-position: center;
+  text-transform: uppercase;
+}
+.newsletter h2 {
+  margin-bottom: 10px;
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 40px;
+}
+.newsletter h4 {
+  margin-bottom: 30px;
+  font-size: 20px;
+  font-weight: 400;
+}
+.newsletter .input-group {
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  max-width: 500px;
+}
+.newsletter input {
+  width: 100%;
+  height: 48px;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 4px 0 0 4px !important;
+  color: #777;
+}
+.newsletter button {
+  border-radius: 0 4px 4px 0 !important;
+  font-family: Oswald;
+  font-weight: 300;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+</style>
+{%- if section.settings.back_image != blank -%}
+  {%- assign banner_image = section.settings.back_image | img_url: 'master' -%}
+{%- else -%}
+  {%- assign banner_image = "https://placehold.it/1170x350" -%}
+{%- endif -%}
+<div data-section-id="{{ section.id }}" data-section-type="newsletter-section">
+  <div style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container">
+      <div class="newsletter lazyload lazypreload" data-bg="{{ banner_image }}">
+        <h2 style="color: {{ section.settings.text_color }};">{{ section.settings.header_title }}</h2>
+        <h4 style="color: {{ section.settings.text_color }};">{{ section.settings.sub_string }}</h4>
+        {%- if settings.newsletter_form_action != blank -%}
+        {%- assign form_action = settings.newsletter_form_action -%}
+        {%- else -%}
+        {%- assign form_action = '#' -%}
+        {%- endif -%}
+        <form action="{{ form_action }}">
+          <div class="input-group">
+            <input id="sc-email" type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="EMAIL" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}">
+            <button type="submit" name="subscribe" {% if settings.language_enable %}data-translate="general.newsletter_form.subscribe"{% endif %}>{{ 'general.newsletter_form.subscribe' | t }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "Set Newsletter Title"
+    },
+    {
+      "type": "text",
+      "id": "header_title",
+      "label": "Newsletter Form Title",
+      "default": "never miss any deals"
+    },
+    {
+      "type": "text",
+      "id": "sub_string",
+      "label": "Brief Description",
+      "default": "subscribe to the newsletter!"
+    },
+    {
+      "type": "header",
+      "content": "Text Color"
+    },
+    {
+      "type":"color",
+      "id": "text_color",
+      "label": "Subscribe Block Color",
+      "default":"#151515"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Background Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter",
+      "category": "Newsletter Form"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}

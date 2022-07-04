@@ -1,0 +1,90 @@
+<!-- /snippets/blog-sidebar.liquid -->
+{% comment %}
+  Recent blog posts
+{% endcomment %}
+<div class="canvas-icon d-block d-lg-none"><a href="javascript:void(0)"><i class="fa fa-sliders"></i></a></div>
+{% if settings.blog_sidebar_recent %}
+<div class="block">
+  <div class="block-title">
+    <h3 class="mt-0" {% if settings.language_enable %}data-translate="blogs.sidebar.recent_articles"{% endif %}>{{ 'blogs.sidebar.recent_articles' | t }}</h3>
+  </div>
+  <div class="block-content blogs-items">
+    <ul>
+      {%- for article in blogs[blog.handle].articles limit:6 -%}
+        <li>
+          <div class="post-image" style="background-image: url({{article.image | img_url: '120x120' }})"></div>
+          <a href="{{ article.url }}">
+            {%- if settings.language_enable -%}
+            <span class="lang1">{{ article.title | split: '|' | first }}</span>
+            <span class="lang2">{{ article.title | split: '|' | last }}</span>
+            {%- else -%}
+            {{ article.title | split: '|' | first }}
+            {%- endif -%}
+          </a>
+          <div class="post-time">
+            {%- capture date -%}<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: format: 'month_day_year' }}</time>{%- endcapture -%}
+            <span class="blog_author"{% if settings.language_enable %} data-translate="blogs.article.author_on_date_html|date:{{date}}" translate-item="blog-date-author"{% endif %}>
+              {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}
+            </span>
+            <div class="clear"></div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{%- endif -%}
+{% comment %}
+  Blog tags
+{% endcomment %}
+{%- if blog.all_tags.size > 0 and settings.blog_sidebar_tags -%}
+<div class="block">
+  <div class="block-title">
+    <h3 {% if settings.language_enable %}data-translate="blogs.sidebar.tags"{% endif %}>{{ 'blogs.sidebar.tags' | t }}</h3>
+  </div>
+  <div class="block-content">
+    <ul class="no-bullets blog-tags clearfix">
+      {%- for tag in blog.all_tags -%}
+      {%- if current_tags contains tag -%}
+      <li><a href="#" class="active">{{ tag }}</a></li>
+      {%- else -%}
+      <li>{{ tag | link_to_tag: tag }}</li>
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+{%- endif -%}
+{% if settings.sidebar_collection_user != blank %}
+<div class="block bestseller">
+  <div class="block-title">
+    <h3 class="lang1">{{ settings.sidebar_collection_title | split: '|' | first }}</h3>
+    {% if settings.language_enable %}
+    <h3 class="lang2">{{ settings.sidebar_collection_title | split: '|' | last }}</h3>
+    {% endif %}
+  </div>
+  <div class="sidebar-content block-content">
+    {% include 'bestseller-collection' %}
+  </div>
+</div>
+{% endif %}
+<script type="text/javascript">
+  jQuery(function($) {
+    $('.canvas-icon, .close-mobile-canvas').click(function(event) {
+      if(!$('body').hasClass('mobile-canvas-shown')) {
+        $('body').addClass('mobile-canvas-shown', function() {
+          setTimeout(function(){
+            $(document).one("click",function(e) {
+              var target = e.target;
+              if (!$(target).is('.block-main-canvas .block') && !$(target).parents().is('.block-main-canvas .canvas-inner')) {
+                $('body').removeClass('mobile-canvas-shown');
+              }
+            });
+          }, 111);
+        });
+      } else{
+        $('body').removeClass('mobile-canvas-shown');
+      }
+    });
+  });
+</script>

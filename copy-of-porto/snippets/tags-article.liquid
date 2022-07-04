@@ -1,0 +1,11 @@
+<!-- /snippets/tags-article.liquid -->
+{% if article.tags.size > 0 %}
+<ul class="inline-list">
+  <li class="article-tags">
+    <i class="icon-folder-open"></i>
+    {%- for tag in article.tags -%}
+    <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{%- unless forloop.last -%}, {%- endunless -%}
+    {%- endfor -%}
+  </li>
+</ul>
+{% endif %}

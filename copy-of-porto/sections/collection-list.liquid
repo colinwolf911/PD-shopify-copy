@@ -1,0 +1,227 @@
+<style>
+.collection-list h2 {
+  margin-bottom: 40px;
+  color: {{ section.settings.title_color }};
+  font-size: {{ section.settings.title_size }};
+}
+</style>
+<div data-section-id="{{ section.id }}" data-section-type="collection-list-section">
+  <div style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container collection-list">
+      {%- if section.settings.section_title != blank -%}
+      {%- if settings.language_enable -%}
+      <h2 class="text-center text-uppercase lang1">
+        {{ section.settings.section_title | split: '|' | first }}
+      </h2>
+      <h2 class="text-center text-uppercase lang2">
+        {{ section.settings.section_title | split: '|' | last }}
+      </h2>
+      {%- else -%}
+      <h2 class="text-center text-uppercase">
+        {{ section.settings.section_title }}
+      </h2>
+      {%- endif -%}
+      {%- endif -%}
+      <div class="row">
+        {%- for block in section.blocks -%}
+          {%- assign current_collection = collections[block.settings.collection_name] -%}
+          {%- if current_collection != blank -%}
+          <div class="col-md-{{ block.settings.collection_width }}" style="height: {{ block.settings.collection_height }}; margin-bottom: 30px;">
+              <a href="{{ current_collection.url }}">
+                {%- if block.settings.image != blank -%}
+                  {%- assign img_url = block.settings.image | img_url: 'master' -%}
+                {%- else -%}
+                  {%- assign img_url = 'img270x350.png' | asset_url -%}
+                {%- endif -%}
+                <img data-src="{{ img_url }}" alt=" {{ current_collection.image.alt }}"/>
+              </a>
+              <h3 style="background-color: {{ section.settings.label_back_color }}; color: {{ section.settings.label_color }}; font-size: {{ section.settings.font_size }};">
+                {{ current_collection.title }}
+              </h3>
+          </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Collection List",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "Title Settings"
+    },
+    {
+      "type": "text",
+      "id":   "section_title",
+      "label": "Section Title",
+      "default": "featured categories"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Collection Label Color",
+      "default": "#151515"
+    },
+    {
+      "type": "text",
+      "id":   "title_size",
+      "label": "Title Font Size",
+      "info": "e.g 22px",
+      "default": "22px"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Collection Label Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "label_back_color",
+      "label": "Collection Label Background Color",
+      "default": "rgba(23, 23, 23, 0.9)"
+    },
+    {
+      "type": "text",
+      "id":   "font_size",
+      "label": "Label Font Size",
+      "info": "e.g 22px",
+      "default": "22px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_list",
+      "name": "Collection",
+      "settings": [
+        {
+          "type":   "collection",
+          "id":     "collection_name",
+          "label":  "Select Collection"
+        },
+        {
+          "type":   "image_picker",
+          "id":     "image",
+          "label":  "Image"
+        },
+        {
+          "type":   "select",
+          "id":     "collection_width",
+          "label":  "Select Width",
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            },
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "9",
+              "label": "9"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            }
+          ],
+          "default": "4"
+        },
+        {
+          "type": "text",
+          "id":   "collection_height",
+          "label": "Set collection height",
+          "info": "e.g. 323px",
+          "default": "323px"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "collection_list"
+        },
+        {
+          "type": "collection_list"
+        },
+        {
+          "type": "collection_list"
+        },
+        {
+          "type": "collection_list"
+        },
+        {
+          "type": "collection_list"
+        },
+        {
+          "type": "collection_list"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

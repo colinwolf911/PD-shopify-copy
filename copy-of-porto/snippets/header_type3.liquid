@@ -1,0 +1,52 @@
+{%- if settings.header_topbar_disable == blank -%}
+<div class="top-links-container topbar-text-{{settings.topbar_text_color}}">
+  <div class="container d-flex">
+    <div class="header-left">
+      <div class="search-area show-left">
+        <a href="javascript:void(0);" class="search-icon"><span>
+          <i class="icon-search"></i>
+        </a>
+        {% include 'header-search' %}
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="top-links-area show-icon-tablet">
+        <div class="top-links-icon">
+          <a href="javascript:;" {% if settings.language_enable %}data-translate="header.settings.links"{% endif %}>{{ 'header.settings.links' | t }}</a>
+        </div>
+        {% section 'header-toplink-menu' %}
+        {% include 'header-setting' %}
+      </div>
+      <div class="cart-area">
+        <div class="mini-cart">
+          {% include 'header-cart' %}
+        </div>
+      </div>
+      {% if settings.header_custom_text != '' %}
+      <div class="custom-block">
+        {% if settings.language_enable %}
+        <div class="lang1">{{ settings.header_custom_text | split: '[lang2]' | first }}</div>
+        <div class="lang2">{{ settings.header_custom_text | split: '[lang2]' | last }}</div>
+        {% else %}
+        {{ settings.header_custom_text | split: '[lang2]' | first }}
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+<div class="header container">
+  <div class="main-nav">
+    <div class="header-left">
+      {% include 'main-menu' %}
+    </div>
+    <div class="header-center">
+      {% include 'header-logo' %}
+    </div>
+    <div class="header-right">
+      {% include 'main-menu', include_second_menu: true %}
+      <div class="menu-icon"><a href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a></div>
+    </div>
+  </div>
+</div>

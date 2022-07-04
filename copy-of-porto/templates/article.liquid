@@ -1,0 +1,215 @@
+<!-- /templates/article.liquid -->
+{% assign number_of_comments = article.comments_count %}
+{% include 'breadcrumb' %}
+<div class="article-container">
+<div class="container">
+  <div class="row">
+    {% if settings.blog_sidebar_position != 'none' %}
+    <div class="col-lg-3 sidebar col-{{ settings.blog_sidebar_position }}">
+      <div class="block-main-canvas">
+        {% include 'blog-sidebar' %}
+      </div>
+    </div>
+    {% endif %}
+    <div class="{% if settings.blog_sidebar_position == 'none' %}col-md-12{% else %}col-lg-9{% endif %}">
+      <div class="blog-wrapper">
+        <div class="post-wrapper">
+          <div class="post-banner">
+            {{ article.excerpt }}
+          </div>
+          <div class="post-date">
+            <span class="day">{{ article.published_at | date: '%d' }}</span>
+            <span class="month">{{ article.published_at | date: '%b' }}</span>
+          </div>
+          <div class="postTitle">
+            <a href="{{ article.url }}">
+              {% if settings.language_enable %}
+              <h2 class="lang1">{{ article.title | split: '|' | first }}</h2>
+              <h2 class="lang2">{{ article.title | split: '|' | last }}</h2>
+              {% else %}
+              <h2>{{ article.title | split: '|' | first }}</h2>
+              {% endif %}
+            </a>
+          </div>
+          <div class="postContent">
+            <div class="postDesc">
+              {% if settings.language_enable %}
+              <div class="lang1">{{ article.content | split: '[lang2]' | first }}</div>
+              <div class="lang2">{{ article.content | split: '[lang2]' | last }}</div>
+              {% else %}
+              {{ article.content | split: '[lang2]' | first }}
+              {% endif %}
+            </div>
+          </div>
+          <div class="postDetails">
+            {% capture author %}{{ article.author }}{% endcapture %}
+
+            {% capture date %}<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+            <span class="blog_author" {% if settings.language_enable %}data-translate="blogs.article.author_on_date_html|date:{{date}},author:{{author}}" translate-item="blog-date-author"{% endif %}>
+              <i class="icon-calendar"></i>
+              {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}
+            </span>
+            <span class="blog_author" {% if settings.language_enable %}data-translate="blogs.article.by_admin|author:{{author}}" translate-item="blog-date-author"{% endif %}>
+              <i class="icon-user"></i>
+              {{- 'blogs.article.by_admin' | t: author: author -}}
+            </span>
+            {% if blog.comments_enabled? %}
+            <span {% if settings.language_enable %}data-translate="blogs.comments.comments_with_count.one|count:{{number_of_comments}}"{% endif %}>
+              <i class="icon-chat"></i>
+              {{- 'blogs.comments.comments_with_count.one' | t: count: number_of_comments -}}
+            </span>
+            {% endif %}
+            <div class="post-share">
+              <h3 {% if settings.language_enable %}data-translate="blogs.article.share_post"{% endif %}>
+                 {{- 'blogs.article.share_post' | t -}}
+              </h3>
+              {%- include 'addthis', page_template: "article" -%}
+            </div>
+          </div>
+          {% if article.user %}
+          <div class="post-author">
+            {% if article.user.image %}
+              {{ article.user.image | img_url: '200x200' | img_tag}}
+            {% else %}
+              {{ 'avatar.jpg' | asset_url | img_tag}}
+            {% endif %}
+            <strong>
+              {{- article.user.first_name | append: " " | append: article.user.last_name -}}
+            </strong>
+            <p>
+              {{- article.user.bio -}}
+            </p>
+          </div>
+          {% endif %}
+
+          <div class="post-comment">
+            {%- if number_of_comments > 0 -%}
+            <h3 {% if settings.language_enable %}data-translate="blogs.comments.comments_with_count.other|count:{{number_of_comments}}"{% endif %}>
+              <i class="icon-chat"></i>
+              {{- 'blogs.comments.comments_with_count.other' | t: count: number_of_comments -}}
+            </h3>
+
+            {%- comment -%}
+            Just like blog.liquid page, define how many comments should be on each page.
+            {%- endcomment -%}
+            {% paginate article.comments by 5 %}
+            {%- comment -%}
+            #Comments is required, it is used as an anchor link by Shopify.
+            {%- endcomment -%}
+            <div id="Comments">
+              {%- if comment and comment.created_at -%}
+              <p class="note form-success">
+                {%- if blog.moderated? -%}
+                <span {% if settings.language_enable %}data-translate="blogs.comments.success_moderated"{% endif %}>{{ 'blogs.comments.success_moderated' | t }}</span>
+                {%- else -%}
+                <span {% if settings.language_enable %}data-translate="blogs.comments.success"{% endif %}>{{ 'blogs.comments.success' | t }}</span>
+                {%- endif -%}
+              </p>
+              {%- endif -%}
+
+              <ul class="no-bullets">
+                {%- comment -%}
+                If a comment was just submitted with no blank field, show it.
+                {%- endcomment -%}
+
+                {%- comment -%}
+                Showing the rest of the comments.
+                {%- endcomment -%}
+                {%- for comment in article.comments -%}
+                <li id="{{ comment.id }}">
+                  {% include 'comment' %}
+                </li>
+                {%- endfor -%}
+              </ul>
+
+              {% if paginate.pages > 1 %}
+              <div class="pagination">
+                {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+              </div>
+              {% endif %}
+            </div>
+            {% endpaginate %}
+            {% endif %}
+
+            {%- comment -%}
+            Comment submission form
+            {%- endcomment -%}
+            {% if blog.comments_enabled? %}
+            <div class="form-vertical">
+              {% form 'new_comment', article %}
+              <h3 id="AddCommentTitle" {% if settings.language_enable %}data-translate="blogs.comments.title"{% endif %}>{{ 'blogs.comments.title' | t }}</h3>
+              <p>
+                Your email address will not be published. Required fields are marked *
+              </p>
+              {{ form.errors | default_errors }}
+
+              <div class="row">
+                <div class="col-12">
+                  <textarea name="comment[body]" id="CommentBody" class="input-full{% if form.errors contains 'body' %} error{% endif %}" placeholder="{{ 'blogs.comments.message' | t }}">{{ form.body }}</textarea>
+                </div>
+                <div class="col-md-6 pr-0">
+                  <input type="text" name="comment[author]" id="CommentAuthor" class="input-full{% if form.errors contains 'author' %} error{% endif %}" value="{{ form.author }}" placeholder="{{ 'blogs.comments.name' | t }}" autocapitalize="words">
+                </div>
+                <div class="col-md-6">
+                  <input type="email" name="comment[email]" id="CommentEmail" class="input-full{% if form.errors contains 'email' %} error{% endif %}" value="{{ form.email }}" placeholder="{{ 'blogs.comments.email' | t }}" autocorrect="off" autocapitalize="off">
+                </div>
+              </div>
+
+              {% if blog.moderated? %}
+              <p {% if settings.language_enable %}data-translate="blogs.comments.moderated"{% endif %}>{{ 'blogs.comments.moderated' | t }}</p>
+              {% endif %}
+
+              <input type="submit" class="btn-button bordered" {% if settings.language_enable %}data-translate="blogs.comments.post"{% endif %} value="{{ 'blogs.comments.post' | t }}">
+
+              {%- if form.errors -%}
+              {%- assign newHash = 'AddCommentTitle' -%}
+              {%- endif -%}
+
+              {%- if form.posted_successfully? -%}
+              {%- assign newHash = 'Comments' -%}
+              {%- endif -%}
+
+              {% endform %}
+            </div>
+            {% endif %}
+          </div>
+
+          {%- if settings.related_posts_display -%}
+          <div class="related-posts">
+            <h3 {% if settings.language_enable %}data-translate="blogs.related_posts"{% endif %}>{{ 'blogs.related_posts' | t }}</h3>
+            <div class="data-carousel"
+              data-items="{{ settings.related_posts_column }}"
+              data-auto="{{ settings.related_posts_autoplay }}"
+              data-paging="{{ settings.related_posts_show_paging }}"
+              data-320="2"
+              data-480="2"
+              data-768="2"
+              data-992="3"
+              data-1200="{{ settings.related_posts_column }}"
+              data-margin="{{ settings.space_related_posts }}"
+              data-nav="{{ settings.related_posts_show_nav }}"
+              data-prev='{{ settings.related_posts_nav_prev }}'
+              data-next='{{ settings.related_posts_nav_next }}' style="display: none;"></div>
+            <div class="owl-carousel carousel-init owl-carousel-lazy">
+              {%- for article in blog.articles -%}
+              <div class="item">
+                <div class="post-featured-image" style="background-image: url({{ article.image | img_url: '400x' }})"></div>
+                <span class="meta-date">
+                  <i class="icon-clock"></i>
+                  <time datetime="{{ article.created_at | date: '%Y-%m-%d' }}">{{ article.created_at | date: format: 'month_day_year' }}</time>
+                </span>
+                <h3 class="post-name">{{ article.title }}</h3>
+                <a href="{{article.url}}">
+                  Read More <i class="icon-right-dir"></i>
+                </a>
+              </div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

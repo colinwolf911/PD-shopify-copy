@@ -1,0 +1,152 @@
+.header-container.type3 {
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .075);
+
+  .header {
+    transition: all .25s;
+  }
+
+  .top-links-container {
+    padding: 0;
+
+    span.split {
+      display: none;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+  }
+
+  .search-area {
+    .search-extended {
+      width: 226px;
+      min-width: 200px;
+      z-index: 15;
+    }
+
+    input {
+      height: 34px;
+      padding-right: 55px;
+      font-family: 'Open Sans';
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+  }
+  
+  .select-language {width: 100%;}
+
+  .search-by-category {display: none;}
+}
+
+.sticky-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, .1);
+  z-index: 999;
+
+  .top-links-container {display: none;}
+}
+
+.autocomplete-suggestion {
+  padding: 5px 15px;
+  
+  .suggestion-title {
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.currency-wrapper {margin-left: 15px;}
+
+.top-links-container {
+  .links li {border-left: 0;}
+
+  .top-links-icon a,
+  span {
+    font-family: Oswald,sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: .325px;
+  }
+
+  .header-left {
+    -ms-flex: none;
+    flex: none;
+  }
+}
+
+.main-nav {
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+
+  .header-left {
+    .navigation-wrapper {
+      padding-right: 55px;
+    }
+
+    .top-navigation {text-align: right;}
+  }
+
+  .header-right {
+    .navigation-wrapper {
+      padding-left: 75px;
+
+      .sticky-header & {padding-left: 60px;}
+    }
+  }
+}
+
+.searchform .searchsubmit {
+  width: 32px;
+
+  &::after {
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.cart-area {
+  position: relative;
+  padding: 12.5px 0 12.5px 13px;
+  border-left: 1px solid rgba(255, 255, 255, .15);
+
+  .cart-total {
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+}
+
+li.level0>a>span>.cat-label {
+  top: 0;
+
+  .sticky-header & {
+    top: -7px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .header-container.type3 .search-area {
+    .search-icon {display: block;}
+
+    .search-extended {
+      display: none;
+      position: absolute;
+      box-shadow: 0 5px 8px rgba(0, 0, 0, .15);
+    }
+  }
+
+  .top-links-area.show-icon-tablet ul.links {
+    right: auto;
+    left: 0;
+  }
+
+  .navigation-wrapper {display: none;}
+}

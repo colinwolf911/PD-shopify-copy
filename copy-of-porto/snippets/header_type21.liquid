@@ -1,0 +1,85 @@
+<div class="header">
+  <div class="switcher-area">
+    {% include 'header-setting' %}
+    <div class="mini-cart">
+      {% include 'header-cart' %}
+    </div>
+  </div>
+  {% include 'header-logo' %}
+  <div class="header-right">
+    {%- if settings.new_style_css == 'yes' -%}
+    <div class="search-area">
+      <a href="javascript:void(0);" class="search-icon"><span><i class="icon-search"></i></span></a>
+      {% include 'header-search' %}
+    </div>
+    {%- endif -%}
+    {%- if settings.new_style_css == 'yes' -%}
+    <div class="menu-icon"><a href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a></div>
+    {%- endif -%}
+    {% include 'side-menu' %}
+    <div class="mobile-group">
+      {%- if settings.new_style_css == 'no' -%}
+      <div class="search-area">
+        <a href="javascript:void(0);" class="search-icon"><span><i class="icon-search"></i></span></a>
+        {% include 'header-search' %}
+      </div>
+      {%- endif -%}
+      <div class="top-links-area">
+        <div class="top-links-icon">
+          <a href="javascript:;" {% if settings.language_enable %}data-translate="header.settings.links"{% endif %}>{{ 'header.settings.links' | t }}</a>
+        </div>
+        {% section 'header-toplink-menu' %}
+      </div>
+      {%- if settings.new_style_css == 'no' -%}
+      <div class="menu-icon"><a href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a></div>
+      {%- endif -%}
+    </div>
+    {%- if settings.header_custom_text != '' -%}
+    <div class="custom-block">
+      {%- if settings.language_enable -%}
+      <div class="lang1">{{ settings.header_custom_text | split: '[lang2]' | first }}</div>
+      <div class="lang2">{{ settings.header_custom_text | split: '[lang2]' | last }}</div>
+      {%- else -%}
+      {{ settings.header_custom_text | split: '[lang2]' | first }}
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+  </div>
+</div>
+<script>
+  jQuery(function($) {
+    var breadcrumb_pos_top = 0;
+    if($(".header-container.type21").length > 0) {
+      $("body").addClass('side-header');
+    }
+
+    $(window).scroll(function() {
+      var side_header_height = $(".header-container.type21").innerHeight();
+      var window_height = $(window).height();
+      if(side_header_height-window_height<$(window).scrollTop()){
+        if(!$(".header-container.type21").hasClass("fixed-bottom")) {
+          $(".header-container.type21").addClass("fixed-bottom");
+        }
+      }
+      if(side_header_height-window_height>=$(window).scrollTop()){
+        if($(".header-container.type21").hasClass("fixed-bottom")) {
+          $(".header-container.type21").removeClass("fixed-bottom");
+        }
+      }
+
+      if($("body.side-header .main-container .main-breadcrumbs").length) {
+        if(!$("body.side-header .main-container .main-breadcrumbs").hasClass("fixed-position")) {
+          breadcrumb_pos_top = $("body.side-header .main-container .main-breadcrumbs").offset().top;
+          if($("body.side-header .main-container .main-breadcrumbs").offset().top<$(window).scrollTop()) {
+            $("body.side-header .main-container .main-breadcrumbs").addClass("fixed-position");
+          }
+        }
+        else {
+          if($(window).scrollTop()<=1) {
+            $("body.side-header .main-container .main-breadcrumbs").removeClass("fixed-position");
+          }
+        }
+      }
+    });
+  });
+</script>
